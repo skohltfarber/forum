@@ -30,16 +30,25 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'two_factor_recovery_codes',
-        'two_factor_secret',
+    // /**
+    //  * The attributes that should be hidden for serialization.
+    //  *
+    //  * @var array<int, string>
+    //  */
+    // protected $hidden = [
+    //     'email_verified_at',
+    //     'password',
+    //     'remember_token',
+    //     'two_factor_recovery_codes',
+    //     'two_factor_secret',
+    //     'updated_at',
+    // ];
+
+    protected $visible = [
+        'id',
+        'name',
+        'email',
+        'updated_at',
     ];
 
     /**
