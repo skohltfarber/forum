@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use ray;
 
 class PostController extends Controller
 {
@@ -13,9 +14,11 @@ class PostController extends Controller
      */
     public function index()
     {
+        ray()->showQueries();
+        // return PostResource::collection(Post::paginate());
         return inertia('Posts/Index', [
 
-            'posts' => PostResource::collection(Post::all()),
+            'posts' => PostResource::collection(Post::paginate()),
 
         ]);
     }
