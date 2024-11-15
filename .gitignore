@@ -19,6 +19,7 @@ yarn-error.log
 conf.d
 docker-compose.yml
 Dockerfile
+nginx.conf
 /.fleet
 /.idea
 /.vscode
