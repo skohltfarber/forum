@@ -1,7 +1,36 @@
+<script setup>
+
+import AppLayout from '@/Layouts/AppLayout.vue';
+import Container from '@/Components/Container.vue';
+import Comment from '@/Components/Comment.vue';
+import Pagination from '@/Components/Pagination.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputError from '@/Components/InputError.vue';
+import TextArea from '@/Components/TextArea.vue';
+import { useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { relativeDate } from '@/Utilities/date';
+
+const props = defineProps(['post', 'comments']);
+const formattedDate = computed(() => relativeDate(props.post.created_at));
+
+const commentForm = useForm({
+    body: '',
+});
+
+const addComment = () => commentForm.post(route('posts.comments.store', props.post.id), {
+    preserveScroll: true, 
+    onSuccess: () => commentForm.reset(),
+});
+
+</script>
+
 <template>
 
     <AppLayout :title="post.title">
         <Container>
+
             <h1 class="text-2xl font-bold">{{ post.title }}</h1>
             <span class="block mt-1 text-sm text-grey-600">{{ formattedDate }} ago by {{ post.user.name }}</span>
 
@@ -11,7 +40,16 @@
 
             <div class="mt-12">
                 <h2 class="text-xl font-semibold">Comments</h2>
-                <block>{{ props.comments.body }}</block>
+                
+                <form v-if="$page.props.auth.user" @submit.prevent="addComment" class="mt-4">
+                    <div>
+                        <InputLabel for="body" class="sr-only">Comment</InputLabel>
+                        <TextArea id="body" v-model="commentForm.body" rows="4" placeholder="Speak your mind Spock..." ></TextArea>
+                        <InputError class="mt-1" :message="commentForm.errors.body" />
+                    </div>
+                    <PrimaryButton type="submit" class="mt-3" :disabled="commentForm.processing">Add Comment</PrimaryButton>
+                </form>
+
 
                 <ul class="divide-y mt-4"> 
 
@@ -29,16 +67,3 @@
 
 </template>
 
-<script setup>
-
-import AppLayout from '@/Layouts/AppLayout.vue';
-import Container from '@/Components/Container.vue';
-import Comment from '@/Components/Comment.vue';
-import { computed } from 'vue';
-import Pagination from '@/Components/Pagination.vue';
-import { relativeDate } from '@/Utilities/date';
-
-const props = defineProps(['post', 'comments']);
-const formattedDate = computed(() => relativeDate(props.post.created_at));
-
-</script>
